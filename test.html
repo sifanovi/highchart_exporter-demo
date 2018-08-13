@@ -1,0 +1,92 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+	<title></title>
+	<script   src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
+	<script src="http://code.highcharts.com/highcharts.js"></script>
+</head>
+
+<body>
+
+
+
+<h1 style="text-align:center"> Blood Pressure Grpah <h1>
+<h1 style="text-align:center">From Date -to Date </h1>
+</h1>
+<div id="container" style="text-align:center"></div>
+
+
+
+
+<script type="text/javascript">
+
+
+
+
+
+
+    var exportUrl = 'http://export.highcharts.com/';
+
+
+   var  xaxis_value=["Jan", "Feb", "Mar"];
+     var   data_value=[29.9, 71.5, 106.4];
+      var  xaxis_value1=["Jan", "Feb", "Mar"];
+     var   data_value1=[39.9, 81.5, 107.4];
+
+    function testPOST(xaxis_value,data_value,container) {
+        
+       
+        var optionsStr = JSON.stringify({
+            "xAxis": {
+                "categories": xaxis_value
+            },
+             "plotOptions": {
+                    "series": {
+                        "marker": {
+                            "enabled": true
+                        },
+                          "dataLabels": {
+                "enabled": true,
+                "borderRadius": 2,
+                "y": -10,
+                "shape": 'callout'
+            }
+                    }
+                },
+                "series": [{
+                "data": data_value
+            }]
+        }),
+        dataString = encodeURI('async=false&type=jpeg&width=400&options=' + optionsStr);
+
+       
+            $.ajax({
+                type: 'POST',
+                data: dataString,
+                url: exportUrl,
+                success: function (data) {
+                    console.log('get the file from relative url: ', data);
+                    $('<div/>',{id:container}).html('<img src="' + exportUrl + data + '"/>').appendTo("#container");
+                },
+                error: function (err) {
+                    debugger;
+                    console.log('error', err.statusText)
+                }
+            });
+        
+
+
+    }
+       $(document).ready(function()
+   {
+
+    testPOST(xaxis_value,data_value,1);
+    testPOST(xaxis_value1,data_value1,2);
+        testPOST(xaxis_value1,data_value1,3);
+      });
+
+
+</script>
+</body>
+</html>
